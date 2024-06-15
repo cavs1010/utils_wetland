@@ -34,15 +34,21 @@ def add_sample_and_outliers_text(ax, df, value_column, category_column):
     """
     outlier_counts = df.groupby(category_column)[value_column].apply(calculate_outliers)
     sample_sizes = df[category_column].value_counts().sort_index()
+    means = df.groupby(category_column)[value_column].mean()
+    medians = df.groupby(category_column)[value_column].median()
+    std_devs = df.groupby(category_column)[value_column].std()
     
-    offset = (ax.get_ylim()[1] - ax.get_ylim()[0]) * 0.02  # 2% of the y-axis range for spacing
+    offset = (ax.get_ylim()[1] - ax.get_ylim()[0]) * 0.15  # 15% of the y-axis range for spacing
 
     for i, category in enumerate(df[category_column].unique()):
         count = sample_sizes[category]
         outliers = outlier_counts[category]
+        mean_val = means[category]
+        median_val = medians[category]
+        std_val = std_devs[category]
         ax.text(i, df[value_column].max() if ax.get_ylim()[1] is None else ax.get_ylim()[1] - offset, 
-                f'n={count}\nOutliers={outliers}', 
-                horizontalalignment='center', size='medium', color='black', weight='semibold')
+        f'n={count}\nOutliers={outliers}\nMean={mean_val:.2f}\nMedian={median_val:.2f}\nStd={std_val:.2f}', 
+        horizontalalignment='center', size='medium', color='black', weight='semibold')
 
 def plot_boxplot(df, value_column, category_column, y_label, title_prefix, y_limits=None):
     """
