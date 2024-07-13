@@ -37,6 +37,9 @@ def add_sample_and_outliers_text(ax, df, value_column, category_column):
     means = df.groupby(category_column)[value_column].mean()
     medians = df.groupby(category_column)[value_column].median()
     std_devs = df.groupby(category_column)[value_column].std()
+    q1s = df.groupby(category_column)[value_column].quantile(0.25)
+    q3s = df.groupby(category_column)[value_column].quantile(0.75)
+    iqrs = q3s - q1s
     
     offset = (ax.get_ylim()[1] - ax.get_ylim()[0]) * 0.15  # 15% of the y-axis range for spacing
 
@@ -46,9 +49,10 @@ def add_sample_and_outliers_text(ax, df, value_column, category_column):
         mean_val = means[category]
         median_val = medians[category]
         std_val = std_devs[category]
+        iqr_val = iqrs[category]
         ax.text(i, df[value_column].max() if ax.get_ylim()[1] is None else ax.get_ylim()[1] - offset, 
-        f'n={count}\nOutliers={outliers}\nMean={mean_val:.2f}\nMedian={median_val:.2f}\nStd={std_val:.2f}', 
-        horizontalalignment='center', size='medium', color='black', weight='semibold')
+                f'n={count}\nOutliers={outliers}\nMean={mean_val:.2f}\nMedian={median_val:.2f}\nStd={std_val:.2f}\nIQR={iqr_val:.2f}', 
+                horizontalalignment='center', size='medium', color='black', weight='semibold')
 
 def plot_boxplot(df, value_column, category_column, y_label, title_prefix, y_limits=None):
     """
