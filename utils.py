@@ -100,7 +100,8 @@ def perform_kruskal_wallis_test(df, value_column, category_column, min_sample_si
         print(f'😔 Excluded from analysis due to small sample size: {excluded_groups}')
     
     kruskal_result = kruskal(*groups)
-    print(f'Kruskal-Wallis H Test: Statistic={kruskal_result.statistic}, p-value={kruskal_result.pvalue}')
+    degrees_of_freedom = len(valid_groups) - 1
+    print(f'Kruskal-Wallis H Test: Statistic={kruskal_result.statistic}, p-value={kruskal_result.pvalue}, df={degrees_of_freedom}')
     return kruskal_result
 
 def perform_posthoc_dunn_test(df, value_column, category_column, min_sample_size):
