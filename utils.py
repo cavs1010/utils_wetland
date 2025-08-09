@@ -24,7 +24,8 @@ def calculate_outliers(data):
 
 def add_sample_and_outliers_text(ax, df, value_column, category_column):
     """
-    Add sample size and outliers count annotations to a boxplot.
+    Add sample size, outliers, and descriptive statistics (including Q1 and Q3) 
+    annotations to a boxplot.
     
     Parameters:
     ax (matplotlib.axes.Axes): The Axes object to annotate.
@@ -49,9 +50,20 @@ def add_sample_and_outliers_text(ax, df, value_column, category_column):
         mean_val = means[category]
         median_val = medians[category]
         std_val = std_devs[category]
+        q1_val = q1s[category]
+        q3_val = q3s[category]
         iqr_val = iqrs[category]
-        ax.text(i, df[value_column].max() if ax.get_ylim()[1] is None else ax.get_ylim()[1] - offset, 
-                f'n={count}\nOutliers={outliers}\nMean={mean_val:.2f}\nMedian={median_val:.2f}\nStd={std_val:.2f}\nIQR={iqr_val:.2f}', 
+        
+        ax.text(i, 
+                df[value_column].max() if ax.get_ylim()[1] is None else ax.get_ylim()[1] - offset, 
+                f'n={count}\n'
+                f'Outliers={outliers}\n'
+                f'Mean={mean_val:.2f}\n'
+                f'Median={median_val:.2f}\n'
+                f'Q1={q1_val:.2f}\n'
+                f'Q3={q3_val:.2f}\n'
+                f'Std={std_val:.2f}\n'
+                f'IQR={iqr_val:.2f}', 
                 horizontalalignment='center', size='medium', color='black', weight='semibold')
 
 def plot_boxplot(df, value_column, category_column, y_label, title_prefix, y_limits=None):
